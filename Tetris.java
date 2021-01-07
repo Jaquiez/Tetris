@@ -17,7 +17,74 @@ import java.awt.event.*;
 
 public class Tetris extends JPanel
 {
-   
+    private int row = 0;
+    private static int wave = 1;
+    private Color[] colors = {Color.blue, Color.magenta, Color.orange, Color.yellow, Color.pink, Color.red, Color.green};  
+    private Point pt;
+    private int currentPiece;
+    private int rotationNumCycle;
+    private ArrayList<Integer>nextPieces = new ArrayList<Integer>();   
+    private int score;
+    private Color[][] background;
+    private Point[][][] shapes = 
+    {
+        {
+            //I as in Iqbal, the last name of the beast himself
+            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(3,1)}, //Rotation 1
+            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(1,3)}, //Rotation 2
+            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(3,1)}, //Rotation 3
+            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(1,3)}  //Rotation 4
+        },
+        {
+            //J
+            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(2,0)}, //Rotation 1
+            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(2,2)}, //Rotation 2
+            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(0,2)}, //Rotation 3
+            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(0,0)}  //Rotation 4
+        },
+        {
+            //L_?
+            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(2,2)}, //Rotation 1
+            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(0,2)}, //Rotation 2
+            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(0,0)}, //Rotation 3
+            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(2,0)}  //Rotation 4
+        },
+        {
+            //[]
+            {new Point(0,0), new Point(0,1), new Point(1,0), new Point(1,1)}, //Rotation 1
+            {new Point(0,0), new Point(0,1), new Point(1,0), new Point(1,1)}, //Rotation 2
+            {new Point(0,0), new Point(0,1), new Point(1,0), new Point(1,1)}, //Rotation 3
+            {new Point(0,0), new Point(0,1), new Point(1,0), new Point(1,1)}  //Rotation 4
+            
+            
+        },
+        {
+            //hat
+            {new Point(1,0), new Point(0,1), new Point(1,1), new Point(2,1)}, //Rotation 1
+            {new Point(1,0), new Point(1,1), new Point(2,1), new Point(1,2)}, //Rotation 2
+            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(1,2)},//Rotation 3
+            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(0,1)} //Rotation 4
+            
+        },
+        {
+            //Z
+            
+            {new Point(0,1), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 1
+            {new Point(1,2), new Point(1,1), new Point(0,1), new Point(0,0)},
+            {new Point(0,1), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 1
+            {new Point(1,2), new Point(1,1), new Point(0,1), new Point(0,0)}//Rotation 4
+            
+        },
+        {
+            //s
+            
+            {new Point(0,0), new Point(1,0), new Point(1,1), new Point(1,2)}, //Rotation 1
+            {new Point(2,2), new Point(2,1), new Point(1,1), new Point(1,0)},
+            {new Point(0,0), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 1
+            {new Point(2,2), new Point(2,1), new Point(1,1), new Point(1,0)}//Rotation 4
+            
+        }
+    };
     public static void main(String[] args) {
        //TURN UP YOUR VOLUMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
        //TURN UP YOUR VOLUMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
@@ -96,77 +163,8 @@ public class Tetris extends JPanel
     }
 
 
-    private Point[][][] shapes = 
-    {
-        {
-            //I as in Iqbal, the last name of the beast himself
-            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(3,1)}, //Rotation 1
-            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(1,3)}, //Rotation 2
-            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(3,1)}, //Rotation 3
-            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(1,3)}  //Rotation 4
-        },
-        {
-            //J
-            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(2,0)}, //Rotation 1
-            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(2,2)}, //Rotation 2
-            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(0,2)}, //Rotation 3
-            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(0,0)}  //Rotation 4
-        },
-        {
-            //L_?
-            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(2,2)}, //Rotation 1
-            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(0,2)}, //Rotation 2
-            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(0,0)}, //Rotation 3
-            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(2,0)}  //Rotation 4
-        },
-        {
-            //[]
-            {new Point(0,0), new Point(0,1), new Point(1,0), new Point(1,1)}, //Rotation 1
-            {new Point(0,0), new Point(0,1), new Point(1,0), new Point(1,1)}, //Rotation 2
-            {new Point(0,0), new Point(0,1), new Point(1,0), new Point(1,1)}, //Rotation 3
-            {new Point(0,0), new Point(0,1), new Point(1,0), new Point(1,1)}  //Rotation 4
-            
-            
-        },
-        {
-            //hat
-            {new Point(1,0), new Point(0,1), new Point(1,1), new Point(2,1)}, //Rotation 1
-            {new Point(1,0), new Point(1,1), new Point(2,1), new Point(1,2)}, //Rotation 2
-            {new Point(0,1), new Point(1,1), new Point(2,1), new Point(1,2)},//Rotation 3
-            {new Point(1,0), new Point(1,1), new Point(1,2), new Point(0,1)} //Rotation 4
-            
-        },
-        {
-            //Z
-            
-            {new Point(0,1), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 1
-            {new Point(1,2), new Point(1,1), new Point(0,1), new Point(0,0)},
-            {new Point(0,1), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 1
-            {new Point(1,2), new Point(1,1), new Point(0,1), new Point(0,0)}//Rotation 4
-            
-        },
-        {
-            //s
-            
-            {new Point(0,1), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 1
-            {new Point(2,2), new Point(2,1), new Point(1,1), new Point(1,0)},
-            {new Point(0,1), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 1
-            {new Point(2,2), new Point(2,1), new Point(1,1), new Point(1,0)}//Rotation 4
-            
-        }
-    };
-    private int row = 0;
-    private static int wave = 1;
-    private Color[] colors = {Color.blue, Color.magenta, Color.orange, Color.yellow, Color.pink, Color.red, Color.green};
     
-    private Point pt;
-    private int currentPiece;
-    private int rotationNumCycle;
 
-    private ArrayList<Integer>nextPieces = new ArrayList<Integer>();
-    
-    private int score;
-    private Color[][] background;
     
     private void init() { /////////BACKGROUND WITH SOME FANCY SCHMANCY COLORS ON THE SIDES (creates an array of colors that represents the background - the if else statement is simply for the stuff on te side))
         background = new Color[12][24];
@@ -317,18 +315,18 @@ public class Tetris extends JPanel
     }
     public boolean checkLoss()
     {
-    int counter = 0;
-    for(int k = 21; k>0; k--)
-    {
-    boolean isColor = false;
-        for(int j = 0; j<12;j++)
+        int counter = 0;
+        for(int k = 21; k>0; k--)
         {
-        if(background[j][k] != Color.black && background[j][k] != Color.cyan){isColor = true;}
+        boolean isColor = false;
+            for(int j = 0; j<12;j++)
+            {
+            if(background[j][k] != Color.black && background[j][k] != Color.cyan){isColor = true;}
+            }
+            if(isColor){counter++;}
         }
-        if(isColor){counter++;}
-    }
-    if(counter >= 20){return true;}
-    return false;
+        if(counter >= 20){return true;}
+        return false;
     }
     public void chickenDinner()
     {

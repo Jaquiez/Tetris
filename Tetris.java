@@ -25,7 +25,10 @@ public class Tetris extends JPanel
     private int rotationNumCycle;
     private ArrayList<Integer>nextPieces = new ArrayList<Integer>();   
     private int score;
+    private LoseScreen loser;
     private Color[][] background;
+    private static JFrame yeet;
+    private static Clip clip;
     private Point[][][] shapes = 
     {
         {
@@ -70,26 +73,21 @@ public class Tetris extends JPanel
             //Z
             
             {new Point(0,1), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 1
-            {new Point(1,2), new Point(1,1), new Point(0,1), new Point(0,0)},
-            {new Point(0,1), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 1
+            {new Point(1,2), new Point(1,1), new Point(0,1), new Point(0,0)},//Rotation 2
+            {new Point(0,1), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 3
             {new Point(1,2), new Point(1,1), new Point(0,1), new Point(0,0)}//Rotation 4
             
         },
         {
             //s
-            
-            {new Point(0,0), new Point(1,0), new Point(1,1), new Point(1,2)}, //Rotation 1
-            {new Point(2,2), new Point(2,1), new Point(1,1), new Point(1,0)},
-            {new Point(0,0), new Point(1,1), new Point(1,0), new Point(2,0)}, //Rotation 1
-            {new Point(2,2), new Point(2,1), new Point(1,1), new Point(1,0)}//Rotation 4
-            
+
+             {new Point(0,0), new Point(1,0), new Point(1,1), new Point(2,1)}, //Rotation 1
+             {new Point(0,2), new Point(0,1), new Point(1,1), new Point(1,0)},//Rotation 2
+             {new Point(0,0), new Point(1,0), new Point(1,1), new Point(2,1)}, //Rotation 3
+             {new Point(0,2), new Point(0,1), new Point(1,1), new Point(1,0)}//Rotation 4
         }
     };
     public static void main(String[] args) {
-       //TURN UP YOUR VOLUMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-       //TURN UP YOUR VOLUMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-       //TURN UP YOUR VOLUMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-       //TURN UP YOUR VOLUMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
        //TURN UP YOUR VOLUMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
         //StartScreen f = new StartScreen();
         StartScreen2 f = new StartScreen2();
@@ -106,57 +104,114 @@ public class Tetris extends JPanel
 }
     
     public static void commence() {
-        JFrame yeet = new JFrame("Tetris");
-        yeet.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        yeet.setSize(12*26+10, 26*23+25);
-        yeet.setVisible(true);
- 
- 
-        Tetris game = new Tetris();
-        game.init();
-        playMusic();
-        yeet.add(game);
-        
-        yeet.addKeyListener(new KeyListener() {
-            public void keyTyped(KeyEvent e) {
-            }
- 
-            public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP:
-                        game.rotate(+1);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        game.moveDown();
-                        
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        game.moveSide(-1);
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        game.moveSide(+1);
-                        break;
-                    case KeyEvent.VK_SPACE:
-                        game.moveDown();
-                        
-                        break;
+        if(yeet!=null)
+        {
+            yeet = new JFrame("Tetris");
+            yeet.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            yeet.setSize(12*26+10, 26*23+25);
+            yeet.setVisible(true);
+
+
+            Tetris game = new Tetris();
+            game.init();
+            playMusic();
+            yeet.add(game);
+            yeet.addKeyListener(new KeyListener() {
+                public void keyTyped(KeyEvent e) {
                 }
-            }
- 
-            public void keyReleased(KeyEvent e) {
-            }
-        });
-        new Thread() {   ///Just learned about this Thread thing...the .sleep for Thread pretty much adds a delay before the tetris block moves down
-            public void run() {
-                while (true) {
-                    try {
+
+                public void keyPressed(KeyEvent e) {
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_UP:
+                            game.rotate(+1);
+                            break;
+                        case KeyEvent.VK_DOWN:
+                            game.moveDown();
+
+                            break;
+                        case KeyEvent.VK_LEFT:
+                            game.moveSide(-1);
+                            break;
+                        case KeyEvent.VK_RIGHT:
+                            game.moveSide(+1);
+                            break;
+                        case KeyEvent.VK_SPACE:
+                            game.moveDown();
+
+                            break;
+                    }
+                }
+
+                public void keyReleased(KeyEvent e) {
+                }
+            });
+            new Thread() {   ///Just learned about this Thread thing...the .sleep for Thread pretty much adds a delay before the tetris block moves down
+                public void run() {
+                    while (true) {
+                        try {
                             int speed= 1000/wave;
-                        Thread.sleep(speed);
-                        game.moveDown();
-                    } catch ( InterruptedException e ) {}
+                            Thread.sleep(speed);
+                            game.moveDown();
+                        } catch ( InterruptedException e ) {}
+                    }
                 }
-            }
-        }.start();
+            }.start();
+        }
+        else
+            {
+            yeet = new JFrame("Tetris");
+            yeet.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            yeet.setSize(12*26+10, 26*23+25);
+            yeet.setVisible(true);
+
+
+            Tetris game = new Tetris();
+            game.init();
+            playMusic();
+            yeet.add(game);
+                yeet.addKeyListener(new KeyListener() {
+                    public void keyTyped(KeyEvent e) {
+                    }
+
+                    public void keyPressed(KeyEvent e) {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_UP:
+                                game.rotate(+1);
+                                break;
+                            case KeyEvent.VK_DOWN:
+                                game.moveDown();
+
+                                break;
+                            case KeyEvent.VK_LEFT:
+                                game.moveSide(-1);
+                                break;
+                            case KeyEvent.VK_RIGHT:
+                                game.moveSide(+1);
+                                break;
+                            case KeyEvent.VK_SPACE:
+                                game.moveDown();
+
+                                break;
+                        }
+                    }
+
+                    public void keyReleased(KeyEvent e) {
+                    }
+                });
+                new Thread() {   ///Just learned about this Thread thing...the .sleep for Thread pretty much adds a delay before the tetris block moves down
+                    public void run() {
+                        while (true) {
+                            try {
+                                int speed= 1000/wave;
+                                Thread.sleep(speed);
+                                game.moveDown();
+                            } catch ( InterruptedException e ) {}
+                        }
+                    }
+                }.start();
+        }
+
+
         
         
         
@@ -330,44 +385,21 @@ public class Tetris extends JPanel
     }
     public void chickenDinner()
     {
-         JFrame frame = new JFrame("YOU WON?????");
-         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         ImageIcon ii = new ImageIcon("win.jpg");
-         JLabel lable = new JLabel(ii);
-         JScrollPane jsp = new JScrollPane(lable);
-         frame.getContentPane().add(jsp);
-         frame.setSize(1920, 1080);
-         frame.setVisible(true);
-         try
-         {
-             Thread.sleep(100000);
-         }
-         catch(InterruptedException ex)
-         {
-            Thread.currentThread().interrupt();
-         }
-         System.exit(0);
+        WinScreen winner = new WinScreen();
     }
     
     public void lose()
     {
-         JFrame fram = new JFrame("LOSEERRRRR!!!!!!!");
-         fram.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         ImageIcon yote = new ImageIcon("lose.jpg");
-         JLabel boat = new JLabel(yote);
-         JScrollPane pp = new JScrollPane(boat);
-         fram.getContentPane().add(pp);
-         fram.setSize(1920, 1080);
-         fram.setVisible(true);
-         try
-         {
-             Thread.sleep(3000);
-         }
-         catch(InterruptedException ex)
-         {
-            Thread.currentThread().interrupt();
-         }
-         System.exit(0);
+        if(loser==null)
+        {
+            loser = new LoseScreen();
+            wave = 1;
+            row = 0;
+            score = 0;
+            clip.close();
+            yeet.dispose();
+        }
+
     }
     private static void playMusic() {
       
@@ -377,7 +409,7 @@ public class Tetris extends JPanel
            if(file.exists())
            {
                AudioInputStream audioInput = AudioSystem.getAudioInputStream(file);
-               Clip clip = AudioSystem.getClip();
+               clip = AudioSystem.getClip();
                clip.open(audioInput);
                clip.start();
                clip.loop(Clip.LOOP_CONTINUOUSLY);

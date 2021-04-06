@@ -1,5 +1,3 @@
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,15 +7,15 @@ import javax.imageio.ImageIO;
 import java.io.*;
 
 
-public class StartScreen2 extends JFrame {
+public class LoseScreen extends JFrame {
 
     private JButton playButtton;
     Color color;
     JFrame c;
 
-    public StartScreen2() {
+    public LoseScreen() {
 
-        playButtton = new JButton("Play");
+        playButtton = new JButton("Play Again?");
         playButtton.setFont(new Font( "Arial", Font.BOLD, 50));
         playButtton.setBackground(Color.red);
 
@@ -27,7 +25,7 @@ public class StartScreen2 extends JFrame {
         c.setLayout(null);
         playButtton.setBounds(380,350,200,75);
         c.getContentPane().setBackground( Color.black);
-        
+
         c.add (playButtton);
 
         ButtonHandler handler = new ButtonHandler();    //creation of a new Object
@@ -36,15 +34,17 @@ public class StartScreen2 extends JFrame {
         JLabel tetrisLOGO = new JLabel(new ImageIcon("tetris-logo.jpg"));
         tetrisLOGO.setBounds(180, 25, 600, 300); // x, y, width, height
         c.add(tetrisLOGO);
-      
+
+
         c.setSize(960, 540);
         c.setVisible(true);
     }
-    
+
     // inner class for button event handling
     public class ButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == playButtton) {
+
                 Tetris.commence();
                 c.setVisible(false);
             }
@@ -53,7 +53,7 @@ public class StartScreen2 extends JFrame {
                             "Right Button has been pressed.");
             }*/
         }
-    } 
-    
-    
+    }
+
+
 } // end of outer class
